@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
         final Observer<LoginResult> observer = new Observer<LoginResult>() {
             @Override
             public void onChanged(@Nullable final LoginResult loginResult) {
-                showMessage(loginResult.getErrorMessage());
+                showMessage(loginResult.getMessage());
             }
         };
         viewModel.getLoginResult().observe(this, observer);
@@ -68,19 +68,19 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(User user) {
                         String message = dataSource.caculMD5Hash(password).equals(user.password) ? "Login successfully" : "Password is invalid";
-                        loginResult.setErrorMessage(message);
+                        loginResult.setMessage(message);
                         viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        loginResult.setErrorMessage("Username does not exist");
+                        loginResult.setMessage("Username does not exist");
                         viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onComplete() {
-                        loginResult.setErrorMessage("Username does not exist");
+                        loginResult.setMessage("Username does not exist");
                         viewModel.getLoginResult().postValue(loginResult);
                     }
                 });
@@ -94,13 +94,13 @@ public class LoginActivity extends AppCompatActivity {
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        loginResult.setErrorMessage("succeed to init user");
+                        loginResult.setMessage("succeed to init user");
                         viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        loginResult.setErrorMessage("failed to init user");
+                        loginResult.setMessage("failed to init user");
                         viewModel.getLoginResult().postValue(loginResult);
                     }
                 });

@@ -1,17 +1,17 @@
 package us.erlang.android_test;
 
 public class LoginResult {
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public LoginResult(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public LoginResult(String message) {
+        this.message = message;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    private String errorMessage;
+    private String message;
 }
