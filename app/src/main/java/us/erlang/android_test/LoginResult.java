@@ -1,13 +1,17 @@
 package us.erlang.android_test;
 
 public class LoginResult {
-    private boolean succeeded;
-
-    public boolean isSucceeded() {
-        return succeeded;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setSucceeded(boolean succeeded) {
-        this.succeeded = succeeded;
+    public LoginResult(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
+
+    private String errorMessage;
 }

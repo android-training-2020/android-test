@@ -1,6 +1,9 @@
 package us.erlang.android_test;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.observers.DisposableCompletableObserver;
 import io.reactivex.observers.DisposableMaybeObserver;
@@ -17,6 +19,8 @@ import io.reactivex.schedulers.Schedulers;
 public class LoginActivity extends AppCompatActivity {
     private EditText userName;
     private EditText userPassword;
+    private LoginViewModel viewModel;
+    private LoginResult loginResult = new LoginResult("");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +46,16 @@ public class LoginActivity extends AppCompatActivity {
                 login(userName.getText().toString(), userPassword.getText().toString());
             }
         });
+
+        viewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+
+        final Observer<LoginResult> observer = new Observer<LoginResult>() {
+            @Override
+            public void onChanged(@Nullable final LoginResult loginResult) {
+                showMessage(loginResult.getErrorMessage());
+            }
+        };
+        viewModel.getLoginResult().observe(this, observer);
     }
 
     private void login(String name, final String password) {
@@ -53,21 +67,21 @@ public class LoginActivity extends AppCompatActivity {
                 .subscribe(new DisposableMaybeObserver<User>() {
                     @Override
                     public void onSuccess(User user) {
-                        if (dataSource.caculMD5Hash(password).equals(user.password)) {
-                            showMessage("Login successfully");
-                        } else {
-                            showMessage("Password is invalid");
-                        }
+                        String message = dataSource.caculMD5Hash(password).equals(user.password) ? "Login successfully" : "Password is invalid";
+                        loginResult.setErrorMessage(message);
+                        viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        showMessage("Username does not exist");
+                        loginResult.setErrorMessage("Username does not exist");
+                        viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onComplete() {
-                        showMessage("Username does not exist");
+                        loginResult.setErrorMessage("Username does not exist");
+                        viewModel.getLoginResult().postValue(loginResult);
                     }
                 });
     }
@@ -80,12 +94,14 @@ public class LoginActivity extends AppCompatActivity {
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        showMessage("succeed to init user");
+                        loginResult.setErrorMessage("succeed to init user");
+                        viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        showMessage("failed to init user");
+                        loginResult.setErrorMessage("failed to init user");
+                        viewModel.getLoginResult().postValue(loginResult);
                     }
                 });
     }
