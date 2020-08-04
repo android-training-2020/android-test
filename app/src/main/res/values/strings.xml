@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">android-test</string>
+    <string name="user_name">please input user name</string>
+    <string name="user_password">please input password</string>
+    <string name="init_user">create user</string>
+    <string name="login">Login</string>
 </resources>
