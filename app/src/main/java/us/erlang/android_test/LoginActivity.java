@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -67,15 +68,15 @@ public class LoginActivity extends AppCompatActivity {
                 .subscribe(new DisposableMaybeObserver<User>() {
                     @Override
                     public void onSuccess(User user) {
-                        String message = dataSource.caculMD5Hash(password).equals(user.password) ? "Login successfully" : "Password is invalid";
+                        String message = dataSource.caculMD5Hash(password).equals(user.password) ?
+                                "Login successfully" : "Password is invalid";
                         loginResult.setMessage(message);
                         viewModel.getLoginResult().postValue(loginResult);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        loginResult.setMessage("Username does not exist");
-                        viewModel.getLoginResult().postValue(loginResult);
+                        Log.e("LoginActivity", "failed to call findByName", e);
                     }
 
                     @Override

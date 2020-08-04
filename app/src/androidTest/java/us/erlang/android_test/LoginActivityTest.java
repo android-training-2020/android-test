@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.concurrent.TimeUnit;
+
 import io.reactivex.Maybe;
 import io.reactivex.MaybeObserver;
 import io.reactivex.internal.operators.maybe.MaybeCreate;
@@ -32,7 +34,7 @@ public class LoginActivityTest {
     public ActivityTestRule<LoginActivity> mActivityRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
-    public void should_login_successfully_when_login_given_correct_username_and_password() {
+    public void should_login_successfully_when_login_given_correct_username_and_password() throws InterruptedException {
         MyApplication applicationContext = (MyApplication) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         UserDBDatasource dataSource = applicationContext.getLocalDataSource();
 
@@ -43,12 +45,13 @@ public class LoginActivityTest {
         onView(withId(R.id.user_name)).perform(typeText("android"));
         onView(withId(R.id.user_password)).perform(typeText("password"));
         onView(withId(R.id.login)).perform(click());
+        TimeUnit.SECONDS.sleep(1);
         onView(withText("Login successfully")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void should_login_failed_when_login_given_invalid_password() {
+    public void should_login_failed_when_login_given_invalid_password() throws InterruptedException {
         MyApplication applicationContext = (MyApplication) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         UserDBDatasource dataSource = applicationContext.getLocalDataSource();
         User user = new User("android", "123456");
@@ -59,12 +62,13 @@ public class LoginActivityTest {
         onView(withId(R.id.user_name)).perform(typeText("android"));
         onView(withId(R.id.user_password)).perform(typeText("123"));
         onView(withId(R.id.login)).perform(click());
+        TimeUnit.SECONDS.sleep(1);
         onView(withText("Password is invalid")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
     }
 
     @Test
-    public void should_login_failed_when_login_given_username_does_not_exist() {
+    public void should_login_failed_when_login_given_username_does_not_exist() throws InterruptedException {
         MyApplication applicationContext = (MyApplication) InstrumentationRegistry.getInstrumentation().getTargetContext().getApplicationContext();
         UserDBDatasource dataSource = applicationContext.getLocalDataSource();
         User user = new User("android", "123");
@@ -79,6 +83,7 @@ public class LoginActivityTest {
         onView(withId(R.id.user_name)).perform(typeText("notexist"));
         onView(withId(R.id.user_password)).perform(typeText("123"));
         onView(withId(R.id.login)).perform(click());
+        TimeUnit.SECONDS.sleep(1);
         onView(withText("Username does not exist")).inRoot(withDecorView(not(is(mActivityRule.getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
     }
