@@ -95,14 +95,12 @@ public class LoginActivity extends AppCompatActivity {
                 .subscribe(new DisposableCompletableObserver() {
                     @Override
                     public void onComplete() {
-                        loginResult.setMessage("succeed to init user");
-                        viewModel.getLoginResult().postValue(loginResult);
+                        showMessage("succeed to init user");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        loginResult.setMessage("failed to init user");
-                        viewModel.getLoginResult().postValue(loginResult);
+                        showMessage("failed to init user");
                     }
                 });
     }
